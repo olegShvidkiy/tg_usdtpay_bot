@@ -1,4 +1,4 @@
-const channelChatId = require("../config.json").chat_id;
+const channelChatId = require("../../config.json").chat_id;
 const {getChannelInviteLink, getChatMember} = require("../utils/utils.js")
 module.exports = {
     name: "pay",
