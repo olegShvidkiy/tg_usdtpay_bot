@@ -18,8 +18,11 @@ const getTransactionList = async (endpoint = default_endpoint)=>{
         url: base_url + endpoint + `?timestamp=${timestamp}` + '&signature=' + signature,
       };
       
-      const result = await axios(req_config);
-      console.log(result.data);
+      try{
+        const result = await axios(req_config);
+        return result.data;
+      }catch(err){console.log(err)}
+      
 }
 
 module.exports = getTransactionList;

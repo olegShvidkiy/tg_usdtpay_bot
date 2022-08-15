@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const schema = new mongoose.Schema({
     tg_username: {
         type: String,
@@ -17,13 +16,12 @@ const schema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    expire_date: Date,
-    tx_id: {
-        type: String, 
-        minlength: 2,
-        maxlength: 255,
+    unique_code: {
+        type: String,
+        minlength: 4,
+        maxlength: 5,
         trim: true
     },
 });
 
-module.exports = mongoose.model("User", schema);
+module.exports = mongoose.model("Payment", schema);
