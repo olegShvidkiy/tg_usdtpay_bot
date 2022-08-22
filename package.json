@@ -11,10 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
-    "crypto-js": "^4.1.1",
-    "datetime": "^0.0.3",
     "dotenv": "^16.0.1",
-    "js": "^0.1.0",
     "mongoose": "^6.5.2",
     "node-telegram-bot-api": "^0.58.0",
     "nodemon": "^2.0.19"
