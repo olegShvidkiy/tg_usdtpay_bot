@@ -16,7 +16,8 @@ const getTransactionList = async (payment)=>{
       
       try{
         result = await axios(req_config);
-        for( let j = 0; j < result.data.total>limit ? limit : result.data.total; j++){
+        const to = result.data.total>limit ? limit : result.data.total;
+        for( let j = 0; j < to; j++){
           const findPayment = checkSinglePayment(result.data.data[j], payment.unique_code);
           if(findPayment) return findPayment;
         }
@@ -26,9 +27,12 @@ const getTransactionList = async (payment)=>{
 }
 
 const checkSinglePayment = (payment, unique_code)=>{
-  const value = payment.trigger_info.parameter._value;
-  const decimal = payment.tokenInfo.tokenDecimal;
-  return value.endsWith(unique_code) && (Number(value)/Math.pow(10, decimal)).toFixed(6) == `19.00${unique_code}`;
+  const value = payment?.trigger_info.parameter._value;
+  const decimal = payment?.tokenInfo.tokenDecimal;
+  if(value && decimal){
+    return value.endsWith(unique_code) && (Number(value)/Math.pow(10, decimal)).toFixed(6) == `19.00${unique_code}`;
+  }
+  
 }
 
 module.exports = getTransactionList;
