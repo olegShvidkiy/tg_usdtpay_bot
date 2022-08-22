@@ -6,6 +6,7 @@ require('dotenv').config();
 const getTransactionList = require("../transaction_checker");
 module.exports = {
     name: "checkPayment",
+    cooldown: 5000,
     run: async (bot, message, args )=>{
         const chatId = message.chat.id;
         let payment, user;
@@ -25,11 +26,10 @@ module.exports = {
             return;
         }
         
-        const transactionList = await getTransactionList();
-        console.log(transactionList)
-        const tx = transactionList.find( element =>{
-            return element.coin === "USDT" && element.network === "TRX" && element.address === process.env.WALLETUSDT && element.amount === String(Number(`19.00${payment[0].unique_code}`));
-        });
+        const tx = await getTransactionList(payment[0]);
+        // const tx = transactionList.find( element =>{
+        //     return element.coin === "USDT" && element.network === "TRX" && element.address === process.env.WALLETUSDT && element.amount === String(Number(`19.00${payment[0].unique_code}`));
+        // });
         // const tx = true;
 
         if(tx){

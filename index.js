@@ -2,7 +2,6 @@ const fs = require("fs");
 const TelegramApi = require("node-telegram-bot-api");
 const getTransactions = require("./src/transaction_checker");
 const db = require("./src/db/db");
-//getTransactions("/sapi/v1/capital/deposit/hisrec")
 require('dotenv').config()
 const date = new Date();
 console.log(new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours()).getTime());
@@ -20,37 +19,90 @@ commands.forEach( file => {
 });
 
 bot.setMyCommands([
-    {command: "/help", description: "Помощь с оплатой"},
+    {command: "/start", description: "Start message"},
 ])
 
 const buttons = {
     reply_markup: JSON.stringify({
-        inline_keyboard:[
-            [{text: "💵 Начать оплату", callback_data: "startPay"}]
-        ]
+        keyboard:[
+            ["💵 Начать оплату", "📜 Инфо"],
+            ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
+        ],
+        resize_keyboard: true
     })
 }
 
+const guideText =  `1.После начала оплаты вы получите реквизиты - адрес кошелька USDT(cеть TRC20) и точную сумму которую нужно перевести, для того чтобы платеж был верифицирован\n\n2.ВАЖНО! НЕ ОКРУГЛЯЙТЕ СУММУ! Вводите точно ту, которая будет указана. Например, стоимость подписки - 19$ + коммисия(если отправлять с binance 0.8$) + уникальная сума для верификации, например 0.001234 = 19.801234(сумма которую вы должны ввести при отправке)\n\n3.Как только платеж будет произведен, можете вернутся в чат с ботом и нажать на кнопку "Подтвердить платеж\n\n4.После проверки, вы получаете одноразовую уникальную ссылку-приглашение для доступа в наш канал.\n\nЕсли у вас возникли трудности с оплатой, можете обратиться в поддержку - @help_process`
+const infoText = `⁉️Что такое 001k.process:\n\t• ежедневные брифинги на рынке крипты;\n\t• брифинги на фондовой рынке;\n\t• актуальные торговые ситуации в течении дня;\n\t• появление активности на монете:\n\t• появление крупного игрока в стакане;\n\t• ответы на вопросы:\n\t• запуск нескольких полезных ботов, которыми пользуется наша команда;`;
+const lastTime = {};
+
 const prefix = "/";
-bot.on( "message", message => {
+bot.on( "message", async message => {
     if(message.text === "/start"){
         bot.sendMessage(message.chat.id, "Добро пожаловать", buttons);
     }
+    let command;
     if(message.text.startsWith(prefix)){
         const args = message.text.slice(prefix.length).trim().split(/ +/g);
         const commandName = args.shift();
-        const command = bot.commands.get(commandName);
+        command = bot.commands.get(commandName);
         if(!command) return;
 
         command.run(bot, message, args);
     }
+
+    switch(message.text){
+        case "💵 Начать оплату": 
+            command = bot.commands.get("startPay");
+            if(!command && checkCooldown(message, command.cooldown)) return;
+            await command.run(bot, message, []);
+        break;
+
+        case "❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️":
+            bot.sendMessage(message.chat.id, guideText);
+        break;
+
+        case "📜 Инфо":
+            bot.sendMessage(message.chat.id, infoText);
+        break;
+
+        case "❌ Отменить оплату":
+            command = bot.commands.get("stopPayment");
+            if(!command && checkCooldown(message, command.cooldown)) return;
+            await command.run(bot, message, []);
+        break;
+
+        case "✅ Подтвердить платеж":
+            command = bot.commands.get("checkPayment");
+            if(!command) return;
+            if(!checkCooldown(message, command.cooldown)) return
+            // console.log(checkCooldown(message, command.cooldown))
+            await command.run(bot, message, []);
+        break;        
+    }
+
 })
 
-bot.on( "callback_query", async msg =>{
+function checkCooldown(message, cooldown){
+    const last = lastTime[message.chat.id]
+    console.log("last", lastTime)
+    if(last && last >= Date.now() - cooldown) return false;
+    lastTime[message.chat.id] = Date.now();
+    return true;
+}
+
+bot.on("callback_query", async msg =>{
+    
     const command = bot.commands.get(msg.data);
+    
     if(!command) return;
+    const last = lastTime[msg.message.chat.id]
+    if(last && last >= Date.now() - command.cooldown) return;
+    lastTime[msg.message.chat.id] = Date.now();
+
     await command.run(bot, msg.message, []);
 })
+
 
 
 

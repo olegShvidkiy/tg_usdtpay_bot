@@ -17,7 +17,7 @@ module.exports = {
     },
 
     generateKey: ()=>{
-        const key = Math.floor( Math.random() * (99999 - 11111) + 11111);
+        const key = Math.floor( Math.random() * (9999 - 1000) + 1000);
         return key;
     }
 } 

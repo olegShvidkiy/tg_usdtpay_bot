@@ -2,16 +2,21 @@ const {generateKey} = require("../utils/utils.js")
 const Payment = require("../db/models/payment");
 const Users = require("../db/models/user");
 require('dotenv').config()
- const buttons = {
+const buttons = {
             reply_markup: JSON.stringify({
-                inline_keyboard:[
-                    [{text: "✅ Подтвердить платеж", callback_data: "checkPayment"}, {text: "❌ Отменить оплату", callback_data: "stopPayment"}]
-                ]
+                keyboard:[
+                    ["✅ Подтвердить платеж", "❌ Отменить оплату"],
+                    ["📜 Инфо"],
+                    ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
+                ],
+                resize_keyboard: true
             }),
             parse_mode: "Markdown"
         };
+
 module.exports = {
     name: "startPay",
+    cooldown: 5000,
     run: async (bot, message, args )=>{
         const chatId = message.chat.id;
 
@@ -23,7 +28,7 @@ module.exports = {
         } catch (err) {console.log(err)} 
 
         if(payment.length){
-            bot.sendMessage(chatId, "Вы уже начали оплату!");
+            bot.sendMessage(chatId, "Вы уже начали оплату!", buttons);
             return;
         }
 
@@ -41,7 +46,7 @@ module.exports = {
             } catch (err) {console.log(err)} 
         }while(samePayment.length)
        
-        const reply = `Адрес: *${process.env.WALLETUSDT}*  TRC20\nСума: *${"19.80"+key}*\nПосле оплаты, нажмите на кнопку *'Подтвердить платеж'*`;
+        const reply = `Адрес: *${process.env.WALLETUSDT}*  TRC20\n\nСумма: *${"19.00"+key} + комиссия сети*\n(на наш счет должно прийти ${"19.00"+key} чтобы платеж прошел)\n\nПосле оплаты, нажмите на кнопку *'Подтвердить платеж'*`;
        
         const pushToDb = async ()=>{
             const tg_id = message.chat.id;
@@ -52,11 +57,10 @@ module.exports = {
             await payment.save();
         };
 
-        if(!payment.length) {
-            pushToDb()
-            bot.sendMessage(chatId, reply, buttons)
-        }else{
-            bot.sendMessage(chatId, "Вы уже начали оплату!");
-        }
+        
+        pushToDb()
+        bot.sendMessage(chatId, reply, {parse_mode: "Markdown"})
+        bot.sendMessage(chatId, `*${process.env.WALLETUSDT}*`, buttons)
+        
     }
 }

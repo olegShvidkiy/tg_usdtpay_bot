@@ -19,7 +19,7 @@ const schema = new mongoose.Schema({
     unique_code: {
         type: String,
         minlength: 4,
-        maxlength: 5,
+        maxlength: 4,
         trim: true
     },
 });

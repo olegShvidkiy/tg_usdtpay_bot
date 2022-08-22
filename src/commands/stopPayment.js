@@ -4,12 +4,18 @@ const buttons = {
     reply_markup: JSON.stringify({
         inline_keyboard:[
             [{text: "💵 Начать оплату сначала", callback_data: "startPay"}]
-        ]
+        ],
+        keyboard:[
+            ["💵 Начать оплату", "📜 Инфо"],
+            ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
+        ],
+        resize_keyboard: true
     }),
     parse_mode: "Markdown"
 };
 module.exports = {
     name: "stopPayment",
+    cooldown: 5000,
     run: async (bot, message, args )=>{
         const chatId = message.chat.id;
         try{
