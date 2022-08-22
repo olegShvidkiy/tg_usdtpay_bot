@@ -1,11 +1,7 @@
 const fs = require("fs");
 const TelegramApi = require("node-telegram-bot-api");
-const getTransactions = require("./src/transaction_checker");
 const db = require("./src/db/db");
 require('dotenv').config()
-const date = new Date();
-console.log(new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours()).getTime());
-console.log(new Date(1663254000000), Date.now())
 const token = process.env.TG_API;
 const bot = new TelegramApi(token, {polling: true});
 
@@ -85,7 +81,6 @@ bot.on( "message", async message => {
 
 function checkCooldown(message, cooldown){
     const last = lastTime[message.chat.id]
-    console.log("last", lastTime)
     if(last && last >= Date.now() - cooldown) return false;
     lastTime[message.chat.id] = Date.now();
     return true;
