@@ -19,7 +19,8 @@ const getTransactionList = async (payment)=>{
         const to = result.data.total>limit ? limit : result.data.total;
         for( let j = 0; j < to; j++){
           const findPayment = checkSinglePayment(result.data.data[j], payment.unique_code);
-          if(findPayment) return findPayment;
+          console.log(result.data);
+          if(findPayment) return result.data.hash;
         }
       }catch(err){console.log(err)}
       i++;

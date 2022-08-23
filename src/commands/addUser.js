@@ -1,6 +1,7 @@
 const Users = require("../db/models/user");
 const Payment = require("../db/models/payment");
 const {getChannelInviteLink} = require("../utils/utils.js");
+require('dotenv').config();
 const channelChatId = process.env.TG_CHAT_ID;
 const buttons = {
     reply_markup: JSON.stringify({
@@ -42,6 +43,7 @@ module.exports = {
             await newUser.save();
             await Payment.deleteOne({tg_id}).exec();
             const link = await getChannelInviteLink(bot, channelChatId);
+            //console.log(link);
             bot.sendMessage(chatId, `Успешно! Бот отправил пользователю ссылку-приглашение в личные сообщения`);
             bot.sendMessage(tg_id, `Платеж успешный! Ваша ссылка(действительна в течении 30-ти минут): ${link}`, buttons);
         }catch(err){console.log(err);}

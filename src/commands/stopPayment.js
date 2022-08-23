@@ -2,9 +2,6 @@ const Payments = require("../db/models/payment");
 const Users = require("../db/models/user");
 const buttons = {
     reply_markup: JSON.stringify({
-        inline_keyboard:[
-            [{text: "💵 Начать оплату сначала", callback_data: "startPay"}]
-        ],
         keyboard:[
             ["💵 Начать оплату", "📜 Инфо"],
             ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
