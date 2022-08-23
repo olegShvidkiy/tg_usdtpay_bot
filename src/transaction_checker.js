@@ -8,28 +8,33 @@ const getTransactionList = async (payment)=>{
   const limit = 50;
   let i = 0;
   let result;
+  const paymentStartTimestamp = new Date(payment.start_date).getTime();
   do{
       const req_config = {
         method: "get",
-        url: base_url + endpoint + `?count=true&limit=${limit}&start=${i}&address=${wallet}`,
+        url: base_url + endpoint + `?count=true&sort=timestamp&limit=${limit}&start=${i*limit}&address=${wallet}`,
       };
       
       try{
         result = await axios(req_config);
-        const to = result.data.total>limit ? limit : result.data.total;
+        const to = result?.data?.total>limit ? limit : result?.data?.total;
         for( let j = 0; j < to; j++){
-          const findPayment = checkSinglePayment(result.data.data[j], payment.unique_code);
-          console.log(result.data);
-          if(findPayment) return result.data.hash;
+          if(result.data.data[j].timestamp<paymentStartTimestamp) return false;
+          const findPayment = checkSinglePayment(result?.data?.data[j], payment?.unique_code);
+          if(findPayment) {
+            const hash = result?.data?.data[j]?.hash ? result?.data?.data[j]?.hash : findPayment;
+            return hash;
+          }
         }
       }catch(err){console.log(err)}
       i++;
-  }while(limit*i <= result.data.total);
+  }while(limit*i <= result?.data?.total);
+  //result?.data?.total
 }
 
 const checkSinglePayment = (payment, unique_code)=>{
-  const value = payment?.trigger_info.parameter._value;
-  const decimal = payment?.tokenInfo.tokenDecimal;
+  const value = payment?.trigger_info?.parameter?._value;
+  const decimal = payment?.tokenInfo?.tokenDecimal;
   if(value && decimal){
     return value.endsWith(unique_code) && (Number(value)/Math.pow(10, decimal)).toFixed(6) == `19.00${unique_code}`;
   }

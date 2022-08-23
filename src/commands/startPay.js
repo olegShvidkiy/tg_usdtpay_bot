@@ -51,7 +51,7 @@ module.exports = {
         const pushToDb = async ()=>{
             const tg_id = message.chat.id;
             const tg_username = message.chat.username;
-            const start_date = message.date*1000;
+            const start_date = Date.now();
             
             const payment = new Payment({tg_username, tg_id, start_date, unique_code: key});
             await payment.save();

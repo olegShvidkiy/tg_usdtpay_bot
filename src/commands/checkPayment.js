@@ -31,12 +31,12 @@ module.exports = {
         //     return element.coin === "USDT" && element.network === "TRX" && element.address === process.env.WALLETUSDT && element.amount === String(Number(`19.00${payment[0].unique_code}`));
         // });
         // const tx = true;
-        
+        console.log(tx)
         if(tx){
             try {
                 const tg_username = payment[0].tg_username;
                 const tg_id = payment[0].tg_id;
-                const tx_id = tx.txId;
+                const tx_id = tx;
                 const date = new Date();
                 const expire_date = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours()).getTime();
 
