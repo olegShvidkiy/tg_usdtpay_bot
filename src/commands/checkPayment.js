@@ -11,7 +11,7 @@ module.exports = {
         const chatId = message.chat.id;
         let payment, user;
         try{ 
-            user = await Users.find({tg_id: chatId});
+            user = await Users.find({tg_id: chatId}).exec();
             payment = await Payment.find({tg_id: message.chat.id}).exec()
         }catch(err){console.log(err);}
 
