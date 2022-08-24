@@ -1,7 +1,7 @@
 const fs = require("fs");
 const TelegramApi = require("node-telegram-bot-api");
-const { adminCommand } = require("./src/commands/addUser");
 const db = require("./src/db/db");
+const startSchedule = require("./src/schedule");
 const text = require("./text.json");
 require('dotenv').config()
 const token = process.env.TG_API;
@@ -35,6 +35,7 @@ const lastTime = {};
 
 const prefix = "/";
 bot.on( "message", async message => {
+    if(message.from.is_bot) return;
     if(message.text === "/start"){
         bot.sendMessage(message.chat.id, text.helloMessage, buttons);
     }
@@ -85,12 +86,6 @@ bot.on( "message", async message => {
 
 })
 
-function checkCooldown(message, cooldown){
-    const last = lastTime[message.chat.id]
-    if(last && last >= Date.now() - cooldown) return false;
-    lastTime[message.chat.id] = Date.now();
-    return true;
-}
 
 bot.on("callback_query", async msg =>{
     
@@ -104,6 +99,17 @@ bot.on("callback_query", async msg =>{
     await command.run(bot, msg.message, []);
 })
 
+function checkCooldown(message, cooldown){
+    const last = lastTime[message.chat.id]
+    if(last && last >= Date.now() - cooldown) return false;
+    lastTime[message.chat.id] = Date.now();
+    return true;
+}
+
+function checkExpiredSubscribes(){
+
+}
+// setInterval(()=>console.log("hello"), 5000  )
 
 
-
+startSchedule(bot);
