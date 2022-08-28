@@ -2,21 +2,22 @@ const {generateKey} = require("../utils/utils.js")
 const Payment = require("../db/models/payment");
 const Users = require("../db/models/user");
 require('dotenv').config()
-const buttons = {
-            reply_markup: JSON.stringify({
-                keyboard:[
-                    ["✅ Подтвердить платеж", "❌ Отменить оплату"],
-                    ["📜 Инфо"],
-                    ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
-                ],
-                resize_keyboard: true
-            }),
-            parse_mode: "Markdown"
-        };
+const keyboard = require("../../keyboard_config")
+// {
+//             reply_markup: JSON.stringify({
+//                 keyboard:[
+//                     ["✅ Подтвердить платеж", "❌ Отменить оплату"],
+//                     ["📜 Инфо"],
+//                     ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
+//                 ],
+//                 resize_keyboard: true
+//             }),
+//             parse_mode: "Markdown"
+//         };
 
 module.exports = {
     name: "startPay",
-    cooldown: 5000,
+    cooldown: 2000,
     run: async (bot, message, args )=>{
         const chatId = message.chat.id;
 
@@ -28,12 +29,12 @@ module.exports = {
         } catch (err) {console.log(err)} 
 
         if(payment.length){
-            bot.sendMessage(chatId, "Вы уже начали оплату!", buttons);
+            bot.sendMessage(chatId, "Вы уже начали оплату!", keyboard.AFTER_START);
             return;
         }
 
         if(user.length){
-            bot.sendMessage(chatId, "Вы уже зарегестрированы!");
+            bot.sendMessage(chatId, "Вы уже зарегестрированы!", keyboard.SUCCESSFUL_PAYMENT);
             return;
         }
 
@@ -60,7 +61,7 @@ module.exports = {
         
         pushToDb()
         bot.sendMessage(chatId, reply, {parse_mode: "Markdown"})
-        bot.sendMessage(chatId, `*${process.env.WALLETUSDT}*`, buttons)
+        bot.sendMessage(chatId, `*${process.env.WALLETUSDT}*`, keyboard.AFTER_START)
         
     }
 }

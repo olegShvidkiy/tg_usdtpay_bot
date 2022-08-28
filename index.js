@@ -20,16 +20,7 @@ bot.setMyCommands([
     {command: "/start", description: "Start message"},
 ])
 
-const buttons = {
-    reply_markup: JSON.stringify({
-        keyboard:[
-            ["💵 Начать оплату", "📜 Инфо"],
-            ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
-        ],
-        resize_keyboard: true,
-    }),
-    parse_mode: "Markdown"
-}
+const keyboard = require("./keyboard_config");
 const admin = [385009577];
 const lastTime = {};
 
@@ -37,7 +28,7 @@ const prefix = "/";
 bot.on( "message", async message => {
     if(message.from.is_bot) return;
     if(message.text === "/start"){
-        bot.sendMessage(message.chat.id, text.helloMessage, buttons);
+        bot.sendMessage(message.chat.id, text.helloMessage, keyboard.BEFORE_START);
     }
     let command;
     if(message.text.startsWith(prefix)){
@@ -78,10 +69,26 @@ bot.on( "message", async message => {
         case "✅ Подтвердить платеж":
             command = bot.commands.get("checkPayment");
             if(!command) return;
-            if(!checkCooldown(message, command.cooldown)) return
+            if(!checkCooldown(message, command.cooldown)) {
+                bot.sendMessage(message.chat.id, `Подождите! Эту команду можно использовать раз в ${command.cooldown/1000} секунд`, {parse_mode: "HTML"});
+                return
+            }
             // console.log(checkCooldown(message, command.cooldown))
             await command.run(bot, message, []);
-        break;        
+        break;
+        case "✅ Проверить подписку":
+            command = bot.commands.get("checkSubscription");
+            if(!command) return;
+            if(!checkCooldown(message, command.cooldown)) {
+                bot.sendMessage(message.chat.id, `Подождите! Эту команду можно использовать раз в ${command.cooldown/1000} секунд`, {parse_mode: "HTML"});
+                return
+            }
+            // console.log(checkCooldown(message, command.cooldown))
+            await command.run(bot, message, []);
+        break;
+        case "📜 Помощь":
+            bot.sendMessage(message.chat.id, `Возникли вопросы, сложности или столкнулись с ошибкой? Пишите на аккаунт поддержки: @help_process`);
+        break;
     }
 
 })
