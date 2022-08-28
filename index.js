@@ -106,10 +106,8 @@ function checkCooldown(message, cooldown){
     return true;
 }
 
-function checkExpiredSubscribes(){
-
-}
 // setInterval(()=>console.log("hello"), 5000  )
 
 
-startSchedule(bot);
+startSchedule(bot)
+

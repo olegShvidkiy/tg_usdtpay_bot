@@ -19,5 +19,8 @@ module.exports = {
     generateKey: ()=>{
         const key = Math.floor( Math.random() * (9999 - 1000) + 1000);
         return key;
-    }
+    },
+
+    banUser: ()=>{},
+    unbanUser: ()=>{}
 } 
