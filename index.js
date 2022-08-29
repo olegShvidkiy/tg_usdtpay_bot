@@ -21,12 +21,11 @@ bot.setMyCommands([
 ])
 
 const keyboard = require("./keyboard_config");
-const admin = [385009577];
+const admin = [385009577, 1348148604];
 const lastTime = {};
 
 const prefix = "/";
 bot.on( "message", async message => {
-    console.log(lastTime)
     if(message.from.is_bot) return;
     if(message.text === "/start"){
         bot.sendMessage(message.chat.id, text.helloMessage, keyboard.BEFORE_START);
