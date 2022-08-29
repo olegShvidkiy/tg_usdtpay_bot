@@ -1,15 +1,6 @@
 const Payments = require("../db/models/payment");
 const Users = require("../db/models/user");
-const buttons = {
-    reply_markup: JSON.stringify({
-        keyboard:[
-            ["💵 Начать оплату", "📜 Инфо"],
-            ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
-        ],
-        resize_keyboard: true
-    }),
-    parse_mode: "Markdown"
-};
+const keyboard = require("../../keyboard_config");
 module.exports = {
     name: "stopPayment",
     cooldown: 5000,
@@ -23,7 +14,7 @@ module.exports = {
             }
             Payments.deleteOne({ tg_id: chatId }).exec().then((res)=>{
                 if(!res.deletedCount) return;
-                bot.sendMessage(chatId, "Оплата успешно отменена!", buttons)
+                bot.sendMessage(chatId, "Оплата успешно отменена!", keyboard.BEFORE_START)
             });
         }catch(err){
             bot.sendMessage(chatId, "Ошибка!")

@@ -2,7 +2,7 @@ module.exports = {
     BEFORE_START: {
         reply_markup: JSON.stringify({
             keyboard:[
-                ["💵 Начать оплату", "📜 Инфо"],
+                ["💵 Начать оплату", "📜 Инфо", "📋 Правила"],
                 ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
             ],
             resize_keyboard: true
@@ -13,7 +13,7 @@ module.exports = {
         reply_markup: JSON.stringify({
             keyboard:[
                 ["✅ Подтвердить платеж", "❌ Отменить оплату"],
-                ["📜 Инфо"],
+                ["📜 Инфо", "📋 Правила"],
                 ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
             ],
             resize_keyboard: true
@@ -24,7 +24,7 @@ module.exports = {
         reply_markup: JSON.stringify({
             keyboard:[
                 ["✅ Проверить подписку"],
-                ["📜 Помощь"],
+                ["📜 Помощь", "📋 Правила"],
             ],
             resize_keyboard: true
         }),

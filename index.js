@@ -89,6 +89,9 @@ bot.on( "message", async message => {
         case "📜 Помощь":
             bot.sendMessage(message.chat.id, `Возникли вопросы, сложности или столкнулись с ошибкой? Пишите на аккаунт поддержки: @help_process`);
         break;
+        case "📋 Правила":
+            bot.sendMessage(message.chat.id, text.rulesText);
+        break;
     }
 
 })
