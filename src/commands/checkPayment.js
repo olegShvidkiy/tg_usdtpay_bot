@@ -4,7 +4,7 @@ const Payment = require("../db/models/payment");
 const Users = require("../db/models/user");
 require('dotenv').config();
 const getTransactionList = require("../transaction_checker");
-
+const text = require("../../text.json")
 const keyboard = require("../../keyboard_config");
 
 module.exports = {
@@ -43,7 +43,8 @@ module.exports = {
                 await user.save();
                 await Payment.deleteOne({tg_id}).exec();
                 const link = await getChannelInviteLink(bot,channelChatId);
-                bot.sendMessage(chatId, `Платеж успешный!👍 Ваша ссылка( действительна в течении 30ти минут ): ${link}`, keyboard.SUCCESSFUL_PAYMENT)
+                bot.sendMessage(chatId, `👍Платеж успешный!\nВаша ссылка( действительна в течении 30ти минут ): ${link}`, keyboard.SUCCESSFUL_PAYMENT);
+                bot.sendMessage(chatId, text.rulesText);
             } catch (err) {console.log(err)}
             
         }else{

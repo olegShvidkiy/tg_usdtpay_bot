@@ -26,6 +26,7 @@ const lastTime = {};
 
 const prefix = "/";
 bot.on( "message", async message => {
+    console.log(lastTime)
     if(message.from.is_bot) return;
     if(message.text === "/start"){
         bot.sendMessage(message.chat.id, text.helloMessage, keyboard.BEFORE_START);
@@ -110,9 +111,10 @@ bot.on("callback_query", async msg =>{
 })
 
 function checkCooldown(message, cooldown){
-    const last = lastTime[message.chat.id]
-    if(last && last >= Date.now() - cooldown) return false;
-    lastTime[message.chat.id] = Date.now();
+    const last = lastTime[message.chat.id];
+    // console.log(last, message )
+    if(last && last.text === message.text && last.date >= Date.now() - cooldown ) return false;
+    lastTime[message.chat.id] = {date:Date.now(), text: message.text};
     return true;
 }
 
