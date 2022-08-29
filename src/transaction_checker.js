@@ -19,7 +19,9 @@ const getTransactionList = async (payment)=>{
         result = await axios(req_config);
         const to = result?.data?.total>limit ? limit : result?.data?.total;
         for( let j = 0; j < to; j++){
-          if(result.data.data[j].timestamp<paymentStartTimestamp) return false;
+          console.log(result?.data?.data[j].timestamp, paymentStartTimestamp, result?.data?.data[j].timestamp<paymentStartTimestamp)
+          if(result?.data?.data[j].timestamp<paymentStartTimestamp) return false;
+          
           // console.log(`${new Date(paymentStartTimestamp)} > ${new Date(result.data.data[j].timestamp)}`)
           const findPayment = checkSinglePayment(result?.data?.data[j], payment?.unique_code);
           if(findPayment) {
@@ -36,8 +38,9 @@ const getTransactionList = async (payment)=>{
 const checkSinglePayment = (payment, unique_code)=>{
   const value = payment?.trigger_info?.parameter?._value;
   const decimal = payment?.tokenInfo?.tokenDecimal;
-  console.log("payment info", value, decimal, (Number(value)/Math.pow(10, decimal)).toFixed(6), `19.00${unique_code}`)
+  
   if(value && decimal){
+    console.log("payment info", value, decimal, (Number(value)/Math.pow(10, decimal)).toFixed(6), `19.00${unique_code}`)
     return value.endsWith(unique_code) && (Number(value)/Math.pow(10, decimal)).toFixed(6) == `19.00${unique_code}`;
   }
   

@@ -3,16 +3,7 @@ const Payment = require("../db/models/payment");
 const {getChannelInviteLink} = require("../utils/utils.js");
 require('dotenv').config();
 const channelChatId = process.env.TG_CHAT_ID;
-const buttons = {
-    reply_markup: JSON.stringify({
-        keyboard:[
-            ["💵 Начать оплату", "📜 Инфо"],
-            ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
-        ],
-        resize_keyboard: true
-    }),
-    parse_mode: "Markdown"
-};
+const keyboard = require("../../keyboard_config")
 module.exports = {
     name: "addUser",
     adminCommand: true,
@@ -43,9 +34,10 @@ module.exports = {
             await newUser.save();
             await Payment.deleteOne({tg_id}).exec();
             const link = await getChannelInviteLink(bot, channelChatId);
+            const chat_link = await getChannelInviteLink(bot, process.env.TG_CHAT_ROOM_ID);
             //console.log(link);
             bot.sendMessage(chatId, `Успешно! Бот отправил пользователю ссылку-приглашение в личные сообщения`);
-            bot.sendMessage(tg_id, `Платеж успешный! Ваша ссылка(действительна в течении 30-ти минут): ${link}`, buttons);
+            bot.sendMessage(tg_id, `👍Платеж успешный!\nТеперь вы можете перейти в наш канал и чат( ссылки действительны в течении 30ти минут ):\n[Ccылка на канал](${link})\n[Ссылка на чат](${chat_link})`, keyboard.SUCCESSFUL_PAYMENT);
         }catch(err){console.log(err);}
 
     }

@@ -43,13 +43,13 @@ module.exports = {
                 await user.save();
                 await Payment.deleteOne({tg_id}).exec();
                 const link = await getChannelInviteLink(bot,channelChatId);
-                bot.sendMessage(chatId, `👍Платеж успешный!\nВаша ссылка( действительна в течении 30ти минут ): ${link}`, keyboard.SUCCESSFUL_PAYMENT);
+                const chat_link = await getChannelInviteLink(bot, process.env.TG_CHAT_ROOM_ID);
+                bot.sendMessage(chatId, `👍Платеж успешный!\nТеперь вы можете перейти в наш канал и чат( ссылки действительны в течении 30ти минут ):\n[Ccылка на канал](${link})\n[Ссылка на чат](${chat_link})`, keyboard.SUCCESSFUL_PAYMENT);
                 bot.sendMessage(chatId, text.rulesText);
             } catch (err) {console.log(err)}
             
         }else{
             bot.sendMessage(chatId, `Платеж ещё не поступил! Попробуйте проверить ещё раз через 30 секунд. Проверьте, правильную ли вы ввели сумму! Поддержка: @help_process`)
         }
-        
     }
 }

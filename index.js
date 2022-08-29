@@ -26,12 +26,13 @@ const lastTime = {};
 
 const prefix = "/";
 bot.on( "message", async message => {
-    if(message.from.is_bot) return;
-    if(message.text === "/start"){
-        bot.sendMessage(message.chat.id, text.helloMessage, keyboard.BEFORE_START);
+    try{
+    if(message?.from?.is_bot || message?.chat?.id === process.env.TG_CHAT_ROOM_ID) return;
+    if(message?.text === "/start"){
+        bot.sendMessage(message?.chat?.id, text.helloMessage, keyboard.BEFORE_START);
     }
     let command;
-    if(message.text.startsWith(prefix)){
+    if(message?.text?.startsWith(prefix)){
         
         const args = message.text.slice(prefix.length).trim().split(/ +/g);
         const commandName = args.shift();
@@ -45,7 +46,7 @@ bot.on( "message", async message => {
         command.run(bot, message, args);
     }
     
-    switch(message.text){
+    switch(message?.text){
         case "💵 Начать оплату": 
             command = bot.commands.get("startPay");
             if(!command && checkCooldown(message, command.cooldown)) return;
@@ -93,7 +94,7 @@ bot.on( "message", async message => {
             bot.sendMessage(message.chat.id, text.rulesText);
         break;
     }
-
+}catch(err){console.log(err)}
 })
 
 
