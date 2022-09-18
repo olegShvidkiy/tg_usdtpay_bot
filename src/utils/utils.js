@@ -2,7 +2,7 @@ module.exports = {
     getChannelInviteLink: async (bot, chatId) => {
         const ops = {
             member_limit: 1,
-            expire_date: Date.now()/1000 + 60*30
+            expire_date: Date.now()/1000 + 60*60*24
         } 
         try {
             let link = await bot.createChatInviteLink(chatId, ops);

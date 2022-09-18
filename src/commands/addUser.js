@@ -3,7 +3,7 @@ const Payment = require("../db/models/payment");
 const {getChannelInviteLink} = require("../utils/utils.js");
 require('dotenv').config();
 const channelChatId = process.env.TG_CHAT_ID;
-const keyboard = require("../../keyboard_config")
+const keyboard = require("../../enums/keyboard_enum")
 module.exports = {
     name: "addUser",
     adminCommand: true,

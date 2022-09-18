@@ -1,9 +1,10 @@
+const BUTTONS = require("./buttons_enum");
 module.exports = {
     BEFORE_START: {
         reply_markup: JSON.stringify({
             keyboard:[
-                ["💵 Начать оплату", "📜 Инфо"],
-                ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
+                [BUTTONS.START_PAY, BUTTONS.INFO],
+                [BUTTONS.READ_BEFORE]
             ],
             resize_keyboard: true
         }),
@@ -12,9 +13,9 @@ module.exports = {
     AFTER_START: {
         reply_markup: JSON.stringify({
             keyboard:[
-                ["✅ Подтвердить платеж", "❌ Отменить оплату"],
-                ["📜 Инфо"],
-                ["❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️"]
+                [BUTTONS.CONFIRM_PAY, BUTTONS.CANCEL_PAY],
+                [BUTTONS.INFO],
+                [BUTTONS.READ_BEFORE]
             ],
             resize_keyboard: true
         }),
@@ -23,8 +24,8 @@ module.exports = {
     SUCCESSFUL_PAYMENT: {
         reply_markup: JSON.stringify({
             keyboard:[
-                ["✅ Проверить подписку"],
-                ["📜 Помощь"],
+                [BUTTONS.CHECK_PAY],
+                [BUTTONS.HELP],
             ],
             resize_keyboard: true
         }),

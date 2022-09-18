@@ -2,7 +2,8 @@ const fs = require("fs");
 const TelegramApi = require("node-telegram-bot-api");
 const db = require("./src/db/db");
 const startSchedule = require("./src/schedule");
-const text = require("./text.json");
+const text = require("./assets/text.json");
+const BUTTONS = require("./enums/buttons_enum");
 require('dotenv').config()
 const token = process.env.TG_API;
 const bot = new TelegramApi(token, {polling: true});
@@ -20,7 +21,7 @@ bot.setMyCommands([
     {command: "/start", description: "Start message"},
 ])
 
-const keyboard = require("./keyboard_config");
+const keyboard = require("./enums/keyboard_enum");
 const admin = [385009577, 1348148604];
 const lastTime = {};
 
@@ -33,7 +34,6 @@ bot.on( "message", async message => {
     }
     let command;
     if(message?.text?.startsWith(prefix)){
-        
         const args = message.text.slice(prefix.length).trim().split(/ +/g);
         const commandName = args.shift();
         command = bot.commands.get(commandName);
@@ -47,79 +47,70 @@ bot.on( "message", async message => {
     }
     
     switch(message?.text){
-        case "💵 Начать оплату": 
+        case BUTTONS.START_PAY: 
             command = bot.commands.get("startPay");
             if(!command && checkCooldown(message, command.cooldown)) return;
             await command.run(bot, message, []);
         break;
 
-        case "❗️ ВАЖНО! ПРОЧТИТЕ ПЕРЕД ОПЛАТОЙ ❗️":
+        case BUTTONS.READ_BEFORE:
             bot.sendMessage(message.chat.id, text.guideText, {parse_mode: "HTML"});
         break;
 
-        case "📜 Инфо":
+        case BUTTONS.INFO:
             bot.sendMessage(message.chat.id, text.infoText);
         break;
 
-        case "❌ Отменить оплату":
+        case BUTTONS.CANCEL_PAY:
             command = bot.commands.get("stopPayment");
             if(!command && checkCooldown(message, command.cooldown)) return;
             await command.run(bot, message, []);
         break;
 
-        case "✅ Подтвердить платеж":
+        case BUTTONS.CONFIRM_PAY:
             command = bot.commands.get("checkPayment");
             if(!command) return;
             if(!checkCooldown(message, command.cooldown)) {
                 bot.sendMessage(message.chat.id, `Подождите! Эту команду можно использовать раз в ${command.cooldown/1000} секунд`, {parse_mode: "HTML"});
                 return
             }
-            // console.log(checkCooldown(message, command.cooldown))
             await command.run(bot, message, []);
         break;
-        case "✅ Проверить подписку":
+        case BUTTONS.CHECK_PAY:
             command = bot.commands.get("checkSubscription");
             if(!command) return;
             if(!checkCooldown(message, command.cooldown)) {
                 bot.sendMessage(message.chat.id, `Подождите! Эту команду можно использовать раз в ${command.cooldown/1000} секунд`, {parse_mode: "HTML"});
                 return
             }
-            // console.log(checkCooldown(message, command.cooldown))
             await command.run(bot, message, []);
         break;
-        case "📜 Помощь":
+        case BUTTONS.HELP:
             bot.sendMessage(message.chat.id, `Возникли вопросы, сложности или столкнулись с ошибкой? Пишите на аккаунт поддержки: @help_process`);
-        break;
-        case "📋 Правила":
-            bot.sendMessage(message.chat.id, text.rulesText);
         break;
     }
 }catch(err){console.log(err)}
 })
 
 
-bot.on("callback_query", async msg =>{
+// bot.on("callback_query", async msg =>{
     
-    const command = bot.commands.get(msg.data);
+//     const command = bot.commands.get(msg.data);
     
-    if(!command) return;
-    const last = lastTime[msg.message.chat.id]
-    if(last && last >= Date.now() - command.cooldown) return;
-    lastTime[msg.message.chat.id] = Date.now();
+//     if(!command) return;
+//     const last = lastTime[msg.message.chat.id]
+//     if(last && last >= Date.now() - command.cooldown) return;
+//     lastTime[msg.message.chat.id] = Date.now();
 
-    await command.run(bot, msg.message, []);
-})
+//     await command.run(bot, msg.message, []);
+// })
 
 function checkCooldown(message, cooldown){
     const last = lastTime[message.chat.id];
-    // console.log(last, message )
     if(last && last.text === message.text && last.date >= Date.now() - cooldown ) return false;
     lastTime[message.chat.id] = {date:Date.now(), text: message.text};
     return true;
 }
-
-// setInterval(()=>console.log("hello"), 5000  )
-
 
 startSchedule(bot)
 

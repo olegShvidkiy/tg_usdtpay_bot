@@ -2,7 +2,7 @@ const {generateKey} = require("../utils/utils.js")
 const Payment = require("../db/models/payment");
 const Users = require("../db/models/user");
 require('dotenv').config()
-const keyboard = require("../../keyboard_config")
+const keyboard = require("../../enums/keyboard_enum")
 
 module.exports = {
     name: "startPay",

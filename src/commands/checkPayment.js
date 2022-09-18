@@ -4,8 +4,8 @@ const Payment = require("../db/models/payment");
 const Users = require("../db/models/user");
 require('dotenv').config();
 const getTransactionList = require("../transaction_checker");
-const text = require("../../text.json")
-const keyboard = require("../../keyboard_config");
+const text = require("../../assets/text.json")
+const keyboard = require("../../enums/keyboard_enum");
 
 module.exports = {
     name: "checkPayment",

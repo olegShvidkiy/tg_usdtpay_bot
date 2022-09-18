@@ -1,6 +1,6 @@
 const Payments = require("../db/models/payment");
 const Users = require("../db/models/user");
-const keyboard = require("../../keyboard_config");
+const keyboard = require("../../enums/keyboard_enum");
 module.exports = {
     name: "stopPayment",
     cooldown: 5000,
