@@ -12,7 +12,7 @@ module.exports = {
         let payment, user;
         try{
             const tg_username = args[0];
-            const link = getChannelInviteLink();
+            const link = getChannelInviteLink(bot, channelChatId);
             user = await Users.find({tg_username: tg_username});
             
             if(!user.length) {
