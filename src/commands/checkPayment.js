@@ -38,15 +38,16 @@ module.exports = {
                 const tx_id = tx;
                 const date = new Date();
                 const expire_date = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours()).getTime();
-                bot.unbanChatMember(channelChatId, tg_id);
+                
                 if(user.length){
                     let userExpireDate = new Date(user[0].expire_date).getTime() + 30*24*60*60*1000;
                     const res = await Users.updateOne({tg_id: user[0].tg_id},{expire_date: userExpireDate}); 
-                    await Payment.deleteOne({tg_id}).exec();       
+                    await Payment.deleteOne({tg_id}).exec();    
                     bot.sendMessage(process.env.TG_NOTIFICATION_CHAT_ID, `Пользователь ${tg_username ? `@${tg_username}` : `c id: ${tg_id}`} успешно ПРОДЛИЛ подписку на месяц! Hash транзакции: ${tx_id}`);
                     bot.sendMessage(chatId, `👍Платеж успешный!\n Подписка продлена на 30 дней!`, keyboard.SUCCESSFUL_PAYMENT);
                     return;
                 }
+                bot.unbanChatMember(channelChatId, tg_id, {only_if_banned: true});
                 bot.sendMessage(process.env.TG_NOTIFICATION_CHAT_ID, `Пользователь @${tg_username} успешно оплатил подписку! Hash транзакции: ${tx_id}`)
                 const newUser = new Users({tg_id, tx_id, tg_username, expire_date}); 
                 await newUser.save();

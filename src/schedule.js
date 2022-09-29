@@ -11,13 +11,13 @@ function startSchedule(bot){
         try{ 
             const date = new Date();
             const comparedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 15, date.getHours());
-            const checkedSubscriptions = await Users.find().exec();
+            const checkedSubscriptions = await Users.find({expire_date: {$lte: comparedDate}}).exec();
             console.log(checkedSubscriptions)
             checkedSubscriptions.forEach( async (user) => {
                 if(user.expire_date <= date) {
                     // console.log(user)
                     bot.sendMessage(user.tg_id, `Ваш срок подписки истек! Вы можете восстановить доступ, купив подписку на месяц снова!`, keyboard.BEFORE_START);
-                    const endedSub = new EndedSubs({...user}); 
+                    const endedSub = new EndedSubs({tg_username: user.tg_username, tg_id: user.tg_id, tx_id: user.tx_id, expire_date: user.expire_date}); 
                     await endedSub.save();
                     Users.deleteOne({ tg_id: user.tg_id }).exec();
                     bot.kickChatMember(channelChatId, user.tg_id);
