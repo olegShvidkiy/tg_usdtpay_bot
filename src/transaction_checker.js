@@ -37,8 +37,9 @@ const checkSinglePayment = (payment, unique_code)=>{
   const value = payment?.trigger_info?.parameter?._value;
   const decimal = payment?.tokenInfo?.tokenDecimal;
   if(value && decimal){
-    console.log("payment info", value, decimal, (Number(value)/Math.pow(10, decimal)).toFixed(6), `19.00${unique_code}`)
-    return value.endsWith(unique_code) && (Number(value)/Math.pow(10, decimal)).toFixed(6) == `19.00${unique_code}`;
+    console.log("payment info", value, (Number(value)/Math.pow(10, decimal)).toFixed(6), `19.00${unique_code}`);
+    const sum = Number(value)/Math.pow(10, decimal);
+    return value.endsWith(unique_code) && sum.toFixed(6).endsWith(unique_code) && sum>=18.2;
   }
   
 }

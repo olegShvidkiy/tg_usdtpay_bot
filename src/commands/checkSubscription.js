@@ -24,8 +24,5 @@ module.exports = {
         console.log(expire_date.getFullYear(), expire_date.getMonth(), expire_date.getDate())
         bot.sendMessage(chatId, `Подписка найдена ✅ Действительна до *${expire_date_text}* ⏳`, keyboard.SUCCESSFUL_PAYMENT);
 
-
-        
-        
     }
 }

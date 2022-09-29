@@ -29,7 +29,6 @@ module.exports = {
             const tx_id = args[1];
             const date = new Date(); 
             const expire_date = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours()).getTime();
-            console.log(tg_id, tg_username, args)
             const newUser = new Users({tg_id, tx_id, tg_username, expire_date}); 
             await newUser.save();
             await Payment.deleteOne({tg_id}).exec();

@@ -13,7 +13,7 @@ module.exports = {
     AFTER_START: {
         reply_markup: JSON.stringify({
             keyboard:[
-                [BUTTONS.CONFIRM_PAY, BUTTONS.CANCEL_PAY],
+                [BUTTONS.CONFIRM_PAY],
                 [BUTTONS.INFO],
                 [BUTTONS.READ_BEFORE]
             ],
@@ -24,7 +24,7 @@ module.exports = {
     SUCCESSFUL_PAYMENT: {
         reply_markup: JSON.stringify({
             keyboard:[
-                [BUTTONS.CHECK_PAY],
+                [BUTTONS.CHECK_PAY, BUTTONS.RENEW_SUB],
                 [BUTTONS.HELP],
             ],
             resize_keyboard: true

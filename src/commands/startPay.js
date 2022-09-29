@@ -23,8 +23,10 @@ module.exports = {
         }
 
         if(user.length){
-            bot.sendMessage(chatId, "Вы уже зарегестрированы!", keyboard.SUCCESSFUL_PAYMENT);
-            return;
+            if(args[0]!=="RENEW"){
+                bot.sendMessage(chatId, "Вы уже зарегестрированы!", keyboard.SUCCESSFUL_PAYMENT);
+                return;
+            }
         }
 
         let samePayment;
@@ -36,7 +38,7 @@ module.exports = {
             } catch (err) {console.log(err)} 
         }while(samePayment.length)
        
-        const reply = `🔖Адрес: *${process.env.WALLETUSDT}*  TRC-20\n\n💰Сумма: *${"19.00"+key} + комиссия сети*\n(на наш счет должно прийти ${"19.00"+key}, чтобы платеж прошел)\n\n✅После оплаты, нажмите на кнопку *'Подтвердить платеж'*, вы автоматически соглашаетесь со всеми правилами нашего сообщества.`;
+        const reply = `🔖Адрес: *${process.env.WALLETUSDT}*  TRC-20\n\n💰Сумма: *${"19.00"+key} + комиссия сети*\n(на наш счет должно прийти ${"19.00"+key}, чтобы платеж прошел). \n\n✅После оплаты, нажмите на кнопку *'Подтвердить платеж'*, вы автоматически соглашаетесь со всеми правилами нашего сообщества.`;
        
         const pushToDb = async ()=>{
             const tg_id = message.chat.id;
@@ -47,8 +49,8 @@ module.exports = {
             await payment.save();
         };
 
-        
-        pushToDb()
+
+        pushToDb();
         bot.sendMessage(chatId, reply, {parse_mode: "Markdown"})
         bot.sendMessage(chatId, `*${process.env.WALLETUSDT}*`, keyboard.AFTER_START)
         

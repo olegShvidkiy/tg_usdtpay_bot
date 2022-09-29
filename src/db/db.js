@@ -1,9 +1,9 @@
 const db = require('mongoose');
 require('dotenv').config();
-// 'mongodb+srv://oleg:oleg15101978@cluster0.140cig5.mongodb.net/?retryWrites=true&w=majority'
 const db_url = process.env.DB_URL;
-db.connect("mongodb://localhost:27017/test_bot").then(res=>console.log("connected"));
+const test_db_url = "mongodb://localhost:27017/test_bot";
+db.connect(db_url).then(res=>console.log("connected"));
 const User = require("../db/models/user");
 const Payment = require("../db/models/payment");
-
+const EndedSubs = require("../db/models/endedSubs")
 module.exports = db;

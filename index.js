@@ -53,6 +53,12 @@ bot.on( "message", async message => {
             await command.run(bot, message, []);
         break;
 
+        case BUTTONS.RENEW_SUB:
+            command = bot.commands.get("startPay");
+            if(!command && checkCooldown(message, command.cooldown)) return;
+            await command.run(bot, message, ["RENEW"]);
+        break;
+
         case BUTTONS.READ_BEFORE:
             bot.sendMessage(message.chat.id, text.guideText, {parse_mode: "HTML"});
         break;
@@ -76,6 +82,7 @@ bot.on( "message", async message => {
             }
             await command.run(bot, message, []);
         break;
+
         case BUTTONS.CHECK_PAY:
             command = bot.commands.get("checkSubscription");
             if(!command) return;
@@ -85,6 +92,10 @@ bot.on( "message", async message => {
             }
             await command.run(bot, message, []);
         break;
+
+        case BUTTONS.RENEW_SUB:
+            break;
+
         case BUTTONS.HELP:
             bot.sendMessage(message.chat.id, `Возникли вопросы, сложности или столкнулись с ошибкой? Пишите на аккаунт поддержки: @help_process`);
         break;
