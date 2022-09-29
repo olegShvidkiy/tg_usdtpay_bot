@@ -6,8 +6,9 @@ module.exports = {
     name: "sendToEveryone",
     adminCommand: true,
     run: async (bot, message, args)=>{
-        const messageToUser = args[0];
+        const messageToUser = args.join(" ");
         const chatId = message.chat.id;
+        console.log()
         let users;
         try{
             users = await Users.find({});
