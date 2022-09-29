@@ -12,9 +12,9 @@ module.exports = {
         let payment, user;
         try{
             const tg_username = args[0];
-            const link = getChannelInviteLink(bot, channelChatId);
+            const link = await getChannelInviteLink(bot, channelChatId);
             user = await Users.find({tg_username: tg_username});
-            
+            console.log(link);
             if(!user.length) {
                 bot.sendMessage(chatId, "Пользователя нет в базе данных!");
                 return;
