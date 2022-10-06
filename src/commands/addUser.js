@@ -34,7 +34,6 @@ module.exports = {
             await Payment.deleteOne({tg_id}).exec();
             const link = await getChannelInviteLink(bot, channelChatId);
             const chat_link = await getChannelInviteLink(bot, process.env.TG_CHAT_ROOM_ID);
-            //console.log(link);
             bot.sendMessage(chatId, `Успешно! Бот отправил пользователю ссылку-приглашение в личные сообщения`);
             bot.sendMessage(tg_id, `👍Платеж успешный!\nТеперь вы можете перейти в наш канал и чат( ссылки действительны в течении 30ти минут ):\n[Ccылка на канал](${link})\n[Ссылка на чат](${chat_link})`, keyboard.SUCCESSFUL_PAYMENT);
         }catch(err){console.log(err);}

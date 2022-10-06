@@ -2,7 +2,7 @@ const Users = require("../db/models/user");
 const Payment = require("../db/models/payment");
 const {getChannelInviteLink} = require("../utils/utils.js");
 require('dotenv').config();
-const channelChatId = process.env.TG_CHAT_ID;
+const roomChatId = process.env.TG_CHAT_ROOM_ID;
 const keyboard = require("../../enums/keyboard_enum")
 module.exports = {
     name: "addUser",
@@ -12,19 +12,19 @@ module.exports = {
         let payment, user;
         try{
             const tg_username = args[0];
-            const link = await getChannelInviteLink(bot, channelChatId);
+            const link = await getChannelInviteLink(bot, roomChatId);
             user = await Users.find({tg_username: tg_username});
-            console.log(link);
             if(!user.length) {
                 bot.sendMessage(chatId, "Пользователя нет в базе данных!");
                 return;
             }
 
             if(user.length){
-                    bot.sendMessage(user[0].tg_id, `Ccылка на канал: ${link}`, keyboard.SUCCESSFUL_PAYMENT);
-                    return;
+                bot.unbanChatMember(roomChatId, user[0].tg_id, {only_if_banned: true});
+                bot.sendMessage(user[0].tg_id, `Ccылка на чат: ${link}`, keyboard.SUCCESSFUL_PAYMENT);
+                bot.sendMessage(chatId, `Ccылка на чат отправлена пользователю @${tg_username}!`);
+                return;
             }
-            bot.sendMessage(chatId, "Пользователя нет в базе данных!");
         }catch(err){console.log(err);}
 
     }
