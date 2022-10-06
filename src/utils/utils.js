@@ -1,3 +1,4 @@
+const lastTime = {};
 module.exports = {
     getChannelInviteLink: async (bot, chatId) => {
         const ops = {
@@ -19,6 +20,13 @@ module.exports = {
     generateKey: ()=>{
         const key = Math.floor( Math.random() * (9999 - 1000) + 1000);
         return key;
+    },
+
+    checkCooldown: (message, cooldown)=>{
+        const last = lastTime[message.chat.id];
+        if(last && last.text === message.text && last.date >= Date.now() - cooldown ) return false;
+        lastTime[message.chat.id] = {date:Date.now(), text: message.text};
+        return true;
     },
 
     banUser: ()=>{},

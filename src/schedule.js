@@ -5,6 +5,7 @@ const EndedSubs = require("./db/models/endedSubs")
 
 const keyboard = require("./../enums/keyboard_enum")
 const channelChatId = process.env.TG_CHAT_ID;
+const roomChatId = process.env.TG_CHAT_ROOM_ID;
 function startSchedule(bot){
     const everyWeekSchedule = cron.schedule("1 12 * * 7", async ()=>{
     
@@ -21,10 +22,12 @@ function startSchedule(bot){
                     await endedSub.save();
                     Users.deleteOne({ tg_id: user.tg_id }).exec();
                     bot.kickChatMember(channelChatId, user.tg_id);
+                    bot.kickChatMember(roomChatId, user.tg_id);
                 }else{
                     const timeToEndInDays = Math.floor((user.expire_date - date) / (1000*60*60*24));
-                    console.log(timeToEndInDays);
-                    bot.sendMessage(user.tg_id, `Ваш срок подписки истекает через ${timeToEndInDays} дней! Если вы хотите продлить доступ, воспользуйтесь соответствующей кнопкой в меню`, keyboard.SUCCESSFUL_PAYMENT).then(()=>{}, (err)=>{});
+                    if( timeToEndInDays%7 === 0 ) {
+                        bot.sendMessage(user.tg_id, `Ваш срок подписки истекает через ${timeToEndInDays} дней! Если вы хотите продлить доступ, воспользуйтесь соответствующей кнопкой в меню`, keyboard.SUCCESSFUL_PAYMENT).then(()=>{}, (err)=>{});
+                    }    
                 }
             })
         }catch(err){console.log(err)}

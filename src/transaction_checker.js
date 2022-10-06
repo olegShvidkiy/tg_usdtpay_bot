@@ -20,7 +20,6 @@ const getTransactionList = async (payment)=>{
         result = await axios(req_config);
         const to = result?.data?.total>limit ? limit : result?.data?.total;
         for( let j = 0; j < to; j++){
-          console.log(result?.data?.data[j].timestamp, paymentStartTimestamp, result?.data?.data[j].timestamp<paymentStartTimestamp)
           if(result?.data?.data[j].timestamp<paymentStartTimestamp) return false;
           const findPayment = checkSinglePayment(result?.data?.data[j], payment?.unique_code);
           if(findPayment) {

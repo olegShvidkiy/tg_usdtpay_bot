@@ -13,9 +13,11 @@
     "axios": "^0.27.2",
     "cron": "^2.1.0",
     "dotenv": "^16.0.1",
+    "input": "^1.0.1",
     "mongoose": "^6.5.2",
     "node-cron": "^3.0.2",
     "node-telegram-bot-api": "^0.58.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "telegram": "^2.12.8"
   }
 }
