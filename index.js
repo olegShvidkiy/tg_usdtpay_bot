@@ -69,7 +69,6 @@ bot.on( "message", async message => {
 
 startSchedule(bot)
 
-
 // const { Api, TelegramClient } = require('telegram')
 // const { StringSession } = require('telegram/sessions')
 // const input = require('input') // npm i input
