@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
         trim: true
     },
     tg_id: {
-        type: String, 
+        type: String,
         minlength: 2,
         maxlength: 255,
         trim: true
@@ -19,11 +19,15 @@ const schema = new mongoose.Schema({
     },
     expire_date: Date,
     tx_id: {
-        type: String, 
+        type: String,
         minlength: 2,
         maxlength: 255,
         trim: true
     },
+    notification: {
+        type: Boolean,
+        default: true
+    }
 });
 
 module.exports = mongoose.model("User", schema);
