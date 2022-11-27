@@ -65,5 +65,5 @@ bot.on("message", async (message) => {
 //     await command.run(bot, msg.message, []);
 // })
 
-// startSchedule(bot);
+startSchedule(bot);
 

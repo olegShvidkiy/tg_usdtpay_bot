@@ -54,7 +54,7 @@ function startSchedule(bot) {
         }
     });
 
-    const paymentProcessTimeSchedule = cron.schedule("*/10 * * * *", async () => {
+    const paymentProcessTimeSchedule = cron.schedule("*/10 * * * * *", async () => {
         try {
             const date = new Date();
             const comparedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes() - 30);
